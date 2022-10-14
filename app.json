@@ -4,8 +4,8 @@
     "slug": "PkmTeam",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/Icon1.png",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,12 +22,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/Icon1.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.lacas0010.PkmTeam"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/Icon1.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "60f0df67-9273-4c1d-9af8-47e8fa02a20c"
+      }
     }
   }
 }
