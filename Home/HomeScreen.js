@@ -3,9 +3,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  FlatList,
-  TextInput,
-  ScrollView,
   BackHandler,
   Image,
   Dimensions,
@@ -18,79 +15,34 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <Image source={require("./Logo.png")} style={styles.img} />
       <TouchableOpacity
-        style={styles.btt1}
+        style={styles.btt}
         onPress={() => navigation.navigate("Time1")}
       >
-        <Text
-          style={{
-            fontSize: 40,
-            color: "#ffe031",
-            textAlign: "center",
-            marginTop: 5,
-          }}
-        >
-          Time 1
-        </Text>
+        <Text style={styles.txt}>Time 1</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.btt}
         onPress={() => navigation.navigate("Time2")}
       >
-        <Text
-          style={{
-            fontSize: 40,
-            color: "#ffe031",
-            textAlign: "center",
-            marginTop: 5,
-          }}
-        >
-          Time 2
-        </Text>
+        <Text style={styles.txt}>Time 2</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.btt}
         onPress={() => navigation.navigate("Time3")}
       >
-        <Text
-          style={{
-            fontSize: 40,
-            color: "#ffe031",
-            textAlign: "center",
-            marginTop: 5,
-          }}
-        >
-          Time 3
-        </Text>
+        <Text style={styles.txt}>Time 3</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.btt}
         onPress={() => navigation.navigate("Time4")}
       >
-        <Text
-          style={{
-            fontSize: 40,
-            color: "#ffe031",
-            textAlign: "center",
-            marginTop: 5,
-          }}
-        >
-          Time 4
-        </Text>
+        <Text style={styles.txt}>Time 4</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.btt}
         onPress={() => navigation.navigate("Time5")}
       >
-        <Text
-          style={{
-            fontSize: 40,
-            color: "#ffe031",
-            textAlign: "center",
-            marginTop: 5,
-          }}
-        >
-          Time 5
-        </Text>
+        <Text style={styles.txt}>Time 5</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.btt2}
@@ -101,7 +53,8 @@ export default function HomeScreen({ navigation }) {
             fontSize: 60,
             color: "#ffffff",
             textAlign: "center",
-            marginTop: 6,
+            marginTop: 3+'%',
+            marginBottom:3+'%'
           }}
         >
           Sair
@@ -113,35 +66,29 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#303030",
+    backgroundColor: "#181b1d",
     minHeight: Dimensions.get("screen").height,
   },
   txt: {
-    color: "lightgray",
     fontSize: 50,
+    color: "#ffe031",
     textAlign: "center",
-    marginTop: 30,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
   },
   btt: {
-    width: 300,
-    height: 70,
+    width: 85 + "%",
+    height: 9 + "%",
     backgroundColor: "#396bba",
     borderRadius: 7,
-    marginTop: 5 + "%",
-    alignSelf: "center",
-  },
-  btt1: {
-    width: 300,
-    height: 70,
-    backgroundColor: "#396bba",
-    borderRadius: 7,
-    marginTop: 15 + "%",
+    marginTop: 3 + "%",
     alignSelf: "center",
   },
   btt2: {
-    width: 300,
-    height: 100,
-    backgroundColor: "#ff5050",
+    width: 85 + "%",
+    height: 12 + "%",
+    backgroundColor: "#ff3530",
     borderRadius: 7,
     marginTop: 3 + "%",
     alignSelf: "center",
@@ -149,6 +96,6 @@ const styles = StyleSheet.create({
   img: {
     width: 95 + "%",
     height: 15 + "%",
-    marginTop: 10 + "%",
+    marginTop: 2 + "%",
   },
 });

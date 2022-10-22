@@ -12,6 +12,7 @@ import {
 import { useBaseUrl } from "../hooks/useBaseUrl.js";
 import axios from "axios";
 import DropDownPicker from "react-native-dropdown-picker";
+import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 
 const Party = [
   {
@@ -43,38 +44,73 @@ const Party = [
 const Item = ({ item }) => {
   const [open1, setOpen1] = useState(false);
   const [value1, setValue1] = useState(null);
-  const [items1, setItems1] = useState([]);
+  const [attack, setAttack] = useState([]);
 
   const [open2, setOpen2] = useState(false);
   const [value2, setValue2] = useState(null);
-  const [items2, setItems2] = useState([]);
 
   const [open3, setOpen3] = useState(false);
   const [value3, setValue3] = useState(null);
-  const [items3, setItems3] = useState([]);
 
   const [open4, setOpen4] = useState(false);
   const [value4, setValue4] = useState(null);
-  const [items4, setItems4] = useState([]);
 
   const [response, setResponse] = useState({ data: { name: "" } });
-
+  const [shiny, setShiny] = useState(false);
   let tempValues = {
     id: "",
   };
 
   const fetchResults = () => {
+    const attackList = [];
     axios.get(`${useBaseUrl()}/pokemon/${tempValues.id}`).then((res) => {
-      console.log(res);
-      setResponse(res);
+      res.data.moves.forEach((attack, index) => {
+        attackList.push({
+          label: attack.move.name,
+          value: index,
+        });
+      });
+      console.log("PoNGoMoN aTAQuI", attackList);
+      setAttack(attackList), setResponse(res);
     });
+  };
+
+  const CondSprite = () => {
+    return shiny === true ? (
+      <ImageBackground
+        source={require("../assets/pokeball.png")}
+        style={{ height: 200, width: 200, flex: 1 }}
+      >
+        {response.data.sprites && (
+          <Image
+            style={{ height: 200, width: 200 }}
+            source={{
+              uri: response.data.sprites.front_shiny,
+            }}
+          ></Image>
+        )}
+      </ImageBackground>
+    ) : (
+      <ImageBackground
+        source={require("../assets/pokeball.png")}
+        style={{ height: 200, width: 200, flex: 1 }}
+      >
+        {response.data.sprites && (
+          <Image
+            style={{ height: 200, width: 200 }}
+            source={{
+              uri: response.data.sprites.front_default,
+            }}
+          ></Image>
+        )}
+      </ImageBackground>
+    );
   };
 
   useEffect(() => {
     console.log(response);
-    if (Object.entries(response).length > 1) {
-    }
-  }, [response]);
+    console.log("PONGOMON ATAQUI", response);
+  });
 
   return (
     <View style={styles.PkmContainer}>
@@ -104,10 +140,10 @@ const Item = ({ item }) => {
               style={styles.atk}
               open={open1}
               value={value1}
-              items={items1}
+              items={attack}
               setOpen={setOpen1}
               setValue={setValue1}
-              setItems={setItems1}
+              setItems={setAttack}
               placeholder="Ataque 1"
               textStyle={{ color: "#074db5" }}
               searchable={true}
@@ -117,15 +153,19 @@ const Item = ({ item }) => {
                 alignSelf: "center",
               }}
               zIndex={4000}
+              listMode="SCROLLVIEW"
+              scrollViewProps={{
+                nestedScrollEnabled: true,
+              }}
             />
             <DropDownPicker
               style={styles.atk}
               open={open3}
               value={value3}
-              items={items3}
+              items={attack}
               setOpen={setOpen3}
               setValue={setValue3}
-              setItems={setItems3}
+              setItems={setAttack}
               placeholder="Ataque 3"
               textStyle={{ color: "#074db5" }}
               searchable={true}
@@ -135,6 +175,10 @@ const Item = ({ item }) => {
                 alignSelf: "center",
               }}
               zIndex={3000}
+              listMode="SCROLLVIEW"
+              scrollViewProps={{
+                nestedScrollEnabled: true,
+              }}
             />
           </View>
           <View style={{ flexDirection: "column", flex: 1 }}>
@@ -142,10 +186,10 @@ const Item = ({ item }) => {
               style={styles.atk}
               open={open2}
               value={value2}
-              items={items2}
+              items={attack}
               setOpen={setOpen2}
               setValue={setValue2}
-              setItems={setItems2}
+              setItems={setAttack}
               placeholder="Ataque 2"
               textStyle={{ color: "#074db5" }}
               searchable={true}
@@ -155,15 +199,19 @@ const Item = ({ item }) => {
                 alignSelf: "center",
               }}
               zIndex={4000}
+              listMode="SCROLLVIEW"
+              scrollViewProps={{
+                nestedScrollEnabled: true,
+              }}
             />
             <DropDownPicker
               style={styles.atk}
               open={open4}
               value={value4}
-              items={items4}
+              items={attack}
               setOpen={setOpen4}
               setValue={setValue4}
-              setItems={setItems4}
+              setItems={setAttack}
               placeholder="Ataque 4"
               textStyle={{ color: "#074db5" }}
               searchable={true}
@@ -173,23 +221,24 @@ const Item = ({ item }) => {
                 alignSelf: "center",
               }}
               zIndex={3000}
+              listMode="SCROLLVIEW"
+              scrollViewProps={{
+                nestedScrollEnabled: true,
+              }}
             />
           </View>
         </View>
         <View style={styles.sprite}>
-          <ImageBackground
-            source={require("../assets/pokeball.png")}
-            style={{ height: 200, width: 200, flex: 1 }}
+          <CondSprite />
+          <TouchableOpacity
+            onPress={() => setShiny((prev) => !prev)}
+            style={styles.shinyBtt}
           >
-            {response.data.sprites && (
-              <Image
-                style={{ height: 200, width: 200 }}
-                source={{
-                  uri: response.data.sprites.front_default,
-                }}
-              ></Image>
-            )}
-          </ImageBackground>
+            <Image
+              source={require("../assets/shinyIcon.png")}
+              style={{ width: 35, height: 35 }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -529,7 +578,7 @@ export default function Team() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#303030",
+    backgroundColor: "#181b1d",
   },
   flatlist: {
     width: 100 + "%",
@@ -543,7 +592,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 100 + "%",
     flexDirection: "row",
-    backgroundColor: "#585959",
+    backgroundColor: "#303030",
     flex: 1,
   },
   atk: {
@@ -596,5 +645,13 @@ const styles = StyleSheet.create({
     alignContent: "center",
     textAlign: "center",
     alignItems: "center",
+  },
+  shinyBtt: {
+    position: "absolute",
+    left: 6 + "%",
+    borderRadius: 15,
+    borderWidth: 1,
+    padding: 5,
+    backgroundColor: "#c4c4c4",
   },
 });

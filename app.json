@@ -2,14 +2,14 @@
   "expo": {
     "name": "PkmTeam",
     "slug": "PkmTeam",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/Icon1.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash.gif",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#181b1d"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

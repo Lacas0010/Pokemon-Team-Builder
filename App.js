@@ -11,6 +11,8 @@ import Time5 from "./Times/Time5.js";
 
 const Stack = createNativeStackNavigator();
 
+//obrigado Paramesh98, você é incrivel S2
+
 export default function App() {
   return (
     <NavigationContainer>
