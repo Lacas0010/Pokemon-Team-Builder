@@ -1,3 +1,3 @@
 export const useBaseUrl=() => {
-    return 'https://pokeapi.co/api/v2/'
+    return 'https://pokeapi.co/api/v2'
 }
