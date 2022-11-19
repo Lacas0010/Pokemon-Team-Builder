@@ -1,0 +1,1 @@
+export const useBaseUrl = () => 'https://pokeapi.co/api/v2';

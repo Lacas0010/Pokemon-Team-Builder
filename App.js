@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+  import { NavigationContainer } from "@react-navigation/native";
+  import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import HomeScreen from "./Home/HomeScreen.js";
-import Time1 from "./Times/Time1.js";
-import Time2 from "./Times/Time2.js";
-import Time3 from "./Times/Time3.js";
-import Time4 from "./Times/Time4.js";
-import Time5 from "./Times/Time5.js";
+import HomeScreen from "./src/Home/HomeScreen.js";
+import Time1 from "./src/Times/Time1.js";
+import Time2 from "./src/Times/Time2.js";
+import Time3 from "./src/Times/Time3.js";
+import Time4 from "./src/Times/Time4.js";
+import Time5 from "./src/Times/Time5.js";
 
 const Stack = createNativeStackNavigator();
 
