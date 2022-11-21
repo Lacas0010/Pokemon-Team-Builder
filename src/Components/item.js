@@ -7,7 +7,7 @@ import handleDb from "../../src/DataBaseConfig.js";
 
 const Item = (props) => {
     const {item} = props;
-    const {save, value0, deleta, setDeleta, setSave} = item;
+    const {save, game, deleta, setDeleta, setSave, fetchedData} = item;
 
     const [name, setName] = useState("");
     const [dex, setDex] = useState("");
@@ -32,8 +32,6 @@ const Item = (props) => {
     });
 
     const [shiny, setShiny] = useState(false);
-
-    const hasRunDataCheck = useRef(false);
 
     const fetchResults = () => {
         const attackList = [];
@@ -64,6 +62,60 @@ const Item = (props) => {
                 console.error(err);
             });
     };
+
+    const updateItem = (id, obj) => {
+        handleDb.update(id, obj)
+            .then(res => console.log("Res: ", res))
+            .catch(err => console.error("Error: ", err));
+    }
+
+    const removeAll = () => {
+        handleDb.remove()
+            .then(() => {
+                console.log("Deletado com sucesso!");
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }
+
+    const obj = {
+        game: game || "texto",
+        numDex: dex,
+        name: name,
+        attack1: value1,
+        attack2: value2,
+        attack3: value3,
+        attack4: value4,
+        shiny: shiny,
+        sprite: "text",
+        // sprite:
+        //   !!response.data.sprites && !shiny
+        //     ? response.data.sprites.front_default
+        //     : response.data.sprites.front_shiny,
+    };
+
+    useEffect(() => {
+        console.log("Debugger", props, save, deleta);
+
+        if (save) {
+            updateItem(item.item.item.id, obj);
+            setSave(false);
+        }
+
+        if (deleta) {
+            removeAll();
+            setDeleta(false);
+        }
+    }, [save, deleta])
+
+    useEffect(() => {
+        console.log(fetchedData)
+
+        if (fetchedData.length !== 0) {
+            console.log(fetchedData[item.item.item.id - 1]);
+        }
+    }, [])
 
     const CondSprite = () => {
         return shiny === true ? (
@@ -96,105 +148,6 @@ const Item = (props) => {
             </ImageBackground>
         );
     };
-
-    const fetchAll = () => {
-        handleDb.all()
-            .then(res => {
-                console.log("kkkkkk", res)
-            })
-            .catch(err => {
-                console.log("Error while fetching data", err);
-            })
-    }
-
-    const getItem = async (src = 'default') => {
-        let hasData = false;
-
-        await handleDb.find(item.item.item.id)
-            .then(() => {})
-            .catch(err => {
-                if (src !== "default" && err.includes('Obj not found')) {
-                    return createNew();
-                }
-
-                hasData = true;
-            })
-
-        return hasData;
-    }
-
-    const createNew = () => {
-        handleDb.create(obj)
-            .then(res => {
-                console.log("Registro criado com sucesso! ", res);
-            })
-    }
-
-    const updateItem = (id, obj) => {
-        handleDb.update(id, obj)
-            .then(res => console.log("Res: ", res))
-            .catch(err => console.error("Error: ", err));
-    }
-
-    const removeAll = () => {
-        handleDb.remove()
-            .then(() => {
-                console.log("Deletado com sucesso!");
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }
-
-    const obj = {
-        sprite: "text",
-        game: value0 || "texto",
-        numDex: dex,
-        name: name,
-        attack1: value1,
-        attack2: value2,
-        attack3: value3,
-        attack4: value4,
-        // sprite:
-        //   !!response.data.sprites && !shiny
-        //     ? response.data.sprites.front_default
-        //     : response.data.sprites.front_shiny,
-        shiny: shiny,
-    };
-
-    useEffect(() => {
-        console.log("Debugger", props, save, deleta);
-
-        if (save) {
-            updateItem(item.item.item.id, obj);
-            setSave(false);
-        }
-
-        if (deleta) {
-            removeAll();
-            setDeleta(false);
-        }
-    }, [save, deleta])
-
-    const [temp, setTemp] = useState([]);
-
-    useEffect(() => {
-        if (!hasRunDataCheck.current) {
-            console.log("parece que n tá rodando uai");
-
-            getItem('checkAll')
-                .then(res => {
-                    setTemp(prevState => [...prevState, res]);
-                })
-                .catch(err => {
-                    console.log("ué bicho", err);
-                })
-
-            hasRunDataCheck.current = true;
-        }
-
-        console.log('temp', temp)
-    }, [])
 
     return (
         <View style={styles.PkmContainer}>

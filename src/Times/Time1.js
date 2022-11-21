@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {FlatList, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import Item from "../Components/item.js";
@@ -10,29 +10,64 @@ const party = require("../MockData/party.json").party;
 
 export default function Team() {
     const [open, setOpen] = useState(false);
-    const [value0, setValue0] = useState(null);
+    const [game, setGame] = useState("");
     const [items, setItems] = useState(games());
     const [save, setSave] = useState(false);
     const [deleta, setDeleta] = useState(false);
 
-    const renderItem = props => <Item item={props}/>;
+    const [fetchedData, setFetchedData] = useState([]);
+
+    const shouldRender = useRef(false);
+
+    const createEntries = () => {
+        const BOILERPLATE_DATA = {
+            game: "",
+            numDex: "",
+            name: "",
+            attack1: "",
+            attack2: "",
+            attack3: "",
+            attack4: "",
+            shiny: "",
+            sprite: "",
+        }
+
+        for (let i = 1; i <= 6; i++) {
+            handleDb.create(BOILERPLATE_DATA)
+                .then(res => {
+                    console.log("Registro criado com sucesso! ", res);
+                })
+        }
+
+        shouldRender.current = true;
+    }
 
     useEffect(() => {
         handleDb.all()
             .then(res => {
-                console.log("Tá puxando eh tudo kkkkkkk", res);
+                if (res.length === 0) {
+                    return createEntries();
+                }
+
+                console.log("??????", res)
+
+                setFetchedData(res);
+
+                shouldRender.current = true;
             })
     }, [])
 
-    return (
+    const renderItem = props => <Item item={props}/>;
+
+    return shouldRender && (
         <View style={styles.container}>
             <DropDownPicker
                 style={styles.picker}
                 open={open}
-                value={value0}
+                value={game}
                 items={items}
                 setOpen={setOpen}
-                setValue={setValue0}
+                setValue={setGame}
                 setItems={setItems}
                 placeholder="Escolha um Jogo"
                 textStyle={{color: "#074db5"}}
@@ -57,7 +92,7 @@ export default function Team() {
             </View>
             <FlatList
                 data={party}
-                renderItem={(item) => renderItem({item, value0, save, setSave, setDeleta, deleta})}
+                renderItem={(item) => renderItem({item, game, save, setSave, setDeleta, deleta, fetchedData})}
                 keyExtractor={(item) => item.id}
                 style={styles.flatlist}
             />
