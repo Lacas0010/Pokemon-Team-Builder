@@ -4,8 +4,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Item from "../Components/item.js";
 import {games} from "../MockData/games.js";
 
-import handleDb from "../DataBaseConfig.js";
-
 const party = require("../MockData/party.json").party;
 
 export default function Team() {
@@ -15,51 +13,9 @@ export default function Team() {
     const [save, setSave] = useState(false);
     const [deleta, setDeleta] = useState(false);
 
-    const [fetchedData, setFetchedData] = useState([]);
-
-    const shouldRender = useRef(false);
-
-    const createEntries = () => {
-        const BOILERPLATE_DATA = {
-            game: "",
-            numDex: "",
-            name: "",
-            attack1: "",
-            attack2: "",
-            attack3: "",
-            attack4: "",
-            shiny: "",
-            sprite: "",
-        }
-
-        for (let i = 1; i <= 6; i++) {
-            handleDb.create(BOILERPLATE_DATA)
-                .then(res => {
-                    console.log("Registro criado com sucesso! ", res);
-                })
-        }
-
-        shouldRender.current = true;
-    }
-
-    useEffect(() => {
-        handleDb.all()
-            .then(res => {
-                if (res.length === 0) {
-                    return createEntries();
-                }
-
-                console.log("??????", res)
-
-                setFetchedData(res);
-
-                shouldRender.current = true;
-            })
-    }, [])
-
     const renderItem = props => <Item item={props}/>;
 
-    return shouldRender && (
+    return (
         <View style={styles.container}>
             <DropDownPicker
                 style={styles.picker}
@@ -92,7 +48,7 @@ export default function Team() {
             </View>
             <FlatList
                 data={party}
-                renderItem={(item) => renderItem({item, game, save, setSave, setDeleta, deleta, fetchedData})}
+                renderItem={(item) => renderItem({item, game, save, setSave, setDeleta, deleta})}
                 keyExtractor={(item) => item.id}
                 style={styles.flatlist}
             />

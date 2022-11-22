@@ -70,7 +70,6 @@ const Item = ({ item }) => {
           value: index,
         });
       });
-      console.log("PoNGoMoN aTAQuI", attackList);
       setAttack(attackList), setResponse(res);
     });
   };
@@ -106,11 +105,6 @@ const CondSprite = () => {
     </ImageBackground>
   );
 };
-
-  useEffect(() => {
-    console.log(response);
-    console.log("PONGOMON ATAQUI", response);
-  });
 
   return (
     <View style={styles.PkmContainer}>

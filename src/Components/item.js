@@ -5,16 +5,19 @@ import DropDownPicker from "react-native-dropdown-picker";
 import {useBaseUrl} from "../hooks/useBaseUrl";
 import handleDb from "../../src/DataBaseConfig.js";
 
+import {useDataContext} from "../contexts";
+
 const Item = (props) => {
     const {item} = props;
-    const {save, game, deleta, setDeleta, setSave, fetchedData} = item;
+    const {save, game, deleta, setDeleta, setSave} = item;
+
+    const [attack, setAttack] = useState([]);
 
     const [name, setName] = useState("");
     const [dex, setDex] = useState("");
 
     const [open1, setOpen1] = useState(false);
     const [value1, setValue1] = useState(null);
-    const [attack, setAttack] = useState([]);
 
     const [open2, setOpen2] = useState(false);
     const [value2, setValue2] = useState(null);
@@ -33,10 +36,35 @@ const Item = (props) => {
 
     const [shiny, setShiny] = useState(false);
 
-    const fetchResults = () => {
+    const {fetchedData} = useDataContext();
+
+    useEffect(() => {
+        if (!!fetchedData) {
+            const actualData = fetchedData.filter((filterItem) => {
+                return filterItem.id === item.item.item.id;
+            })[0];
+    
+            if (!!actualData.numDex) {
+                const PARSED_DEX = actualData.numDex.toString();
+    
+                setDex(PARSED_DEX);
+    
+                fetchResults(PARSED_DEX);
+            }
+    
+            setValue1(actualData.attack1);
+            setValue2(actualData.attack2);
+            setValue3(actualData.attack3);
+            setValue4(actualData.attack4);
+            setName(actualData.name);
+            setShiny(actualData.shiny);
+        }
+    }, [])
+
+    const fetchResults = (dexNum = undefined) => {
         const attackList = [];
 
-        axios.get(`${useBaseUrl()}/pokemon/${dex}`)
+        axios.get(`${useBaseUrl()}/pokemon/${dexNum || dex}`)
             .then((res) => {
                 const {name} = res.data;
 
@@ -70,34 +98,38 @@ const Item = (props) => {
     }
 
     const removeAll = () => {
-        handleDb.remove()
-            .then(() => {
-                console.log("Deletado com sucesso!");
-            })
-            .catch(err => {
-                console.error(err);
-            });
+        setDex("");
+        setValue1("");
+        setValue2("");
+        setValue3("");
+        setValue4("");
+        setName("");
+        setShiny("");
+
+        updateItem(item.item.item.id, {
+            game: "",
+            numDex: "",
+            name: "",
+            attack1: "",
+            attack2: "",
+            attack3: "",
+            attack4: "",
+            shiny: ""
+        });
     }
 
     const obj = {
-        game: game || "texto",
+        game: game || "",
         numDex: dex,
         name: name,
         attack1: value1,
         attack2: value2,
         attack3: value3,
         attack4: value4,
-        shiny: shiny,
-        sprite: "text",
-        // sprite:
-        //   !!response.data.sprites && !shiny
-        //     ? response.data.sprites.front_default
-        //     : response.data.sprites.front_shiny,
+        shiny: shiny
     };
 
     useEffect(() => {
-        console.log("Debugger", props, save, deleta);
-
         if (save) {
             updateItem(item.item.item.id, obj);
             setSave(false);
@@ -108,14 +140,6 @@ const Item = (props) => {
             setDeleta(false);
         }
     }, [save, deleta])
-
-    useEffect(() => {
-        console.log(fetchedData)
-
-        if (fetchedData.length !== 0) {
-            console.log(fetchedData[item.item.item.id - 1]);
-        }
-    }, [])
 
     const CondSprite = () => {
         return shiny === true ? (
@@ -154,6 +178,8 @@ const Item = (props) => {
             <View style={{display: "flex", flex: 1}}>
                 <Text style={{color: "white"}}> {item.title}</Text>
                 <TextInput
+                    keyboardType="numeric"
+                    defaultValue={dex || ""}
                     style={styles.input}
                     placeholder="Número da Dex"
                     placeholderTextColor="#074db5"
@@ -164,7 +190,7 @@ const Item = (props) => {
                 ></TextInput>
                 <TextInput
                     style={styles.input}
-                    placeholder="  Nome"
+                    placeholder="Nome"
                     placeholderTextColor="#074db5"
                     value={name}
                     onChangeText={(e) => setName(e)}
